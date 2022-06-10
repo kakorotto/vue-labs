@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Day</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="./vueversion3.js"></script>
+  <style>
+    .card>p {
+      text-align: justify;
+    }
+
+    .less {
+      color: orange;
+    }
+
+    .more {
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container" id="app">
+    <div class="d-flex justify-content-between align-items-baseline bg-dark text-light mt-2 px-2">
+      <a href="#" class="text-warning" @click.prevent="iscartvisible=false">books</a>
+      <div class="d-flex align-items-baseline">
+        <p class="mx-2">[0] item | items with name</p>
+        <button class="btn btn-primary" @click="iscartvisible=true">show cart</button>
+      </div>
+    </div><!-- end of the navbar-->
+    <!-- books -->
+    <div class="row justify-content-center mb-4" v-if="iscartvisible==false">
+      <div v-for="book in books" class="card" style="width: 25rem; margin:0.4rem ;">
+        <img :src="book.img + '&text=' + book.title" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{book.title}}</h5>
+          <p class="card-text">{{book.subtitle}}</p>
+        </div>
+        <ul class="list-group">
+          <ul class="list-group list-group-horizontal justify-content-center mt-2">
+            <li class="list-group-item">Category: {{book.category}}</li>
+            <li class="list-group-item">Author: {{book.author}}</li>
+          </ul>
+          <ul class="list-group list-group-horizontal justify-content-center m-2">
+            <li :class="[book.pages>=50?'more':'',book.pages<50?'less':'']" class="list-group-item">
+              pages: {{book.pages}}</li>
+            <li class="list-group-item">Price: {{book.price}}</li>
+          </ul>
+          <ul class="list-group list-group-horizontal justify-content-center mb-2">
+            <li class="list-group-item">ISBN: {{book.isbn}}</li>
+            <li class="list-group-item">
+              <button class="btn btn-secondary">Add to list</button>
+            </li>
+          </ul>
+        </ul>
+        <div class="card-footer d-flex justify-content-between align-items-baseline">
+          <p :class="[book.pages>=50?'more':'',book.pages<50?'less':'',book.pages==0?'none':'',]"></p>
+        </div>
+        <div class="card-body">
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end of the container -->
+  <script src="./books.js"></script>
+  <script>
+    const app = Vue.createApp({
+      data: () => ({
+        books: books,
+        isbookListAailable: false,
+        bookList: { items: [] },
+      }),
+      methods: {
+        addToList(book) {
+          this.bookList.items.push({ book })
+          book.instock--;
+        },
+        checkExist(book) {
+          return this.bookList.items.some(item => item.book.id == book.id)
+        },
+        getTotalItems() {
+          let total = 0;
+          for (let i = 0; i < this.bookList.items.length; i++) {
+            total += this.bookList.items[i].quantity * this.bookList.items[i].book.price;
+          }
+          return total;
+        }
+      },
+    })
+    app.mount('#app');
+
+
+  </script>
+</body>
+
+</html>
